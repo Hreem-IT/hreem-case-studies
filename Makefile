@@ -1,9 +1,9 @@
-QUARKUS_VERSION ?= 1.7.3.Final
+QUARKUS_VERSION ?= 1.8.1.Final
 AWS_REGION ?= eu-west-1
 ENV ?= dev
-GROUP_ID=`mvn org.apache.maven.plugins:maven-help-plugin:3.2.0:evaluate -Dexpression=project.groupId -q -DforceStdout`
-ARTIFACT_ID=`mvn org.apache.maven.plugins:maven-help-plugin:3.2.0:evaluate -Dexpression=project.artifactId -q -DforceStdout`
-VERSION=`mvn org.apache.maven.plugins:maven-help-plugin:3.2.0:evaluate -Dexpression=project.version -q -DforceStdout`
+GROUP_ID=$(shell ./mvnw org.apache.maven.plugins:maven-help-plugin:3.2.0:evaluate -Dexpression=project.groupId -q -DforceStdout)
+ARTIFACT_ID=$(shell ./mvnw org.apache.maven.plugins:maven-help-plugin:3.2.0:evaluate -Dexpression=project.artifactId -q -DforceStdout)
+VERSION=$(shell ./mvnw org.apache.maven.plugins:maven-help-plugin:3.2.0:evaluate -Dexpression=project.version -q -DforceStdout)
 STACK_NAME=$(ARTIFACT_ID)-stack
 BUCKET_NAME=$(ARTIFACT_ID)-artifact-bucket
 FUNCTION_NAME=FaasTestQuarkus
@@ -38,16 +38,17 @@ init:
 	@echo "----- Environment setup COMPLETE. Happy hacking! 🚀  🚀  🚀  🚀  🚀 -----"
 deploy:
 	@echo "-----🚀  🚀 Deploying stack: ${STACK_NAME} to ${ENV} environment 🚀  🚀  -----"
-	./mvnw clean install -Pnative -Dnative-image.docker-build=true
+	# ./mvnw clean install -Pnative -Dnative-image.docker-build=true
 	sam deploy \
 		 -t sam.native.yaml \
 		 --stack-name $(STACK_NAME) \
 		 --s3-bucket $(BUCKET_NAME) \
 		 --region $(AWS_REGION) \
-		 --tags env=$(ENV)\ 
-		 	app=$(ARTIFACT_ID)\
-			groupId=$(GROUP_ID)\
-			version=$(VERSION)\
+		 --tags \
+		 	env=$(ENV) \
+		 	app=$(ARTIFACT_ID) \
+			groupId=$(GROUP_ID) \
+			version=$(VERSION) \
 		 --capabilities CAPABILITY_IAM
 	@echo "----- Deployment of stack: ${STACK_NAME} to ${ENV} environment DONE -----"
 
