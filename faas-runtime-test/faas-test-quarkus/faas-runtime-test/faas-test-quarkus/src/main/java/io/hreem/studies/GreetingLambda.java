@@ -8,7 +8,6 @@ import com.amazonaws.services.lambda.runtime.RequestHandler;
 
 import lombok.val;
 
-@Named("greet")
 public class GreetingLambda implements RequestHandler<GreetingInput, Greeting> {
 
     @Inject
