@@ -1,0 +1,8 @@
+{
+  "name": "simple-http-node",
+  "author": "Hassan Nazar",
+  "main": "./index.js",
+  "version": "1.0",
+  "dependencies": {
+  }
+}

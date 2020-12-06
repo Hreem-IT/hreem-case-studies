@@ -1,0 +1,28 @@
+---
+Transform: AWS::Serverless-2016-10-31
+
+Description: >
+  Simple Http example serverless stack (Native Mode)
+
+Parameters:
+  Service:
+    Type: String
+  GroupName:
+    Type: String
+
+Resources:
+  SimpleHttpQuarkus:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub ${Service}-native
+      Handler: not.used.in.native.deployment
+      Runtime: provided
+      CodeUri: ../target/function.zip
+      MemorySize: 512
+      Environment:
+        Variables:
+          DISABLE_SIGNAL_HANDLERS: true
+      Timeout: 15
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Sub ${Service}-sessions

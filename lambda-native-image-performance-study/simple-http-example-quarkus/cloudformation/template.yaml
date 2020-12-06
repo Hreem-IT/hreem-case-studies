@@ -1,0 +1,25 @@
+---
+Transform: AWS::Serverless-2016-10-31
+
+Description: >
+  Simple http example serverless stack (JVM Mode)
+
+Parameters:
+  Service:
+    Type: String
+  GroupName:
+    Type: String
+
+Resources:
+  SimpleHttpQuarkus:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub ${Service}
+      Handler: io.quarkus.amazon.lambda.runtime.QuarkusStreamHandler::handleRequest
+      Runtime: java11
+      CodeUri: ../target/function-runner.jar
+      MemorySize: 512
+      Timeout: 15
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Sub ${Service}-table

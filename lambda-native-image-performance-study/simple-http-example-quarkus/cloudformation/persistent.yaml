@@ -1,0 +1,33 @@
+---
+Transform: AWS::Serverless-2016-10-31
+
+Description: >
+  Simple Http example persistent stack
+
+Parameters:
+  Service:
+    Type: String
+
+Resources:
+  ArtifactsBucket:
+    Type: "AWS::S3::Bucket"
+    Properties:
+      BucketName: !Sub ${Service}-artifacts
+      Tags:
+        - Key: Service
+          Value: !Sub ${Service}
+
+        - Key: Summary
+          Value: "S3 Bucket for storing deployment artifacts"
+
+  SimpleHttpTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub ${Service}-table
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: userId
+          AttributeType: S
+      KeySchema:
+        - AttributeName: userId
+          KeyType: HASH
